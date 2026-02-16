@@ -22,7 +22,7 @@
 ;; found path, and if it includes "after/" just before our glob match, we'll
 ;; swap the type to after and expand the glob slightly.
 
-(fn generate-runtime-loaders [plugin-type glob path]
+(fn generate-runtime-loaders [plugin-type glob path ?opts]
   (let [{: make-record-loader} (require :hotpot.loader)
         {:fetch fetch-record} (require :hotpot.loader.record)
         {: make-runtime-record} (require :hotpot.lang.fennel)
@@ -37,7 +37,8 @@
                               plugin-type)
               modname (-> (string.match fnl-path (.. plugin-type "/(.-)%.fnl$"))
                           (string.gsub "/" "."))
-              fresh-record (make-runtime-record modname fnl-path {:runtime-type plugin-type})
+              record-opts (vim.tbl_extend :force {:runtime-type plugin-type} (or ?opts {}))
+              fresh-record (make-runtime-record modname fnl-path record-opts)
               record (or (fetch-record fresh-record.lua-path) fresh-record)]
           (case (make-record-loader record)
             (where loader (= :function (type loader))) {: loader
@@ -92,6 +93,21 @@
     (nvim_create_autocmd :FileType {:callback find-ftplugins
                                     :desc "Execute ftplugin/*.fnl files"
                                     :group augroup-id})
+    ;; Compile lsp/*.fnl to cache for Neovim's native lsp/ loading.
+    ;; Done at enable-time so files are available before VimEnter.
+    (generate-runtime-loaders :lsp "lsp/*.fnl" vim.go.rtp {:compile-only? true})
+    ;; Clean up stale lsp cache files when source .fnl files are removed.
+    (let [{: file-exists? : rm-file} (require :hotpot.fs)
+          {: glob-search} (require :hotpot.searcher)
+          {: fetch : drop} (require :hotpot.loader.record)
+          {: cache-path-for-compiled-artefact} (require :hotpot.loader)
+          cache-prefix (cache-path-for-compiled-artefact)]
+      (each [_ lua-path (ipairs (glob-search {:glob "lsp/*.lua" :all? true}))]
+        (when (= 1 (string.find lua-path cache-prefix 1 true))
+          (case (fetch lua-path)
+            record (when (not (file-exists? record.src-path))
+                     (rm-file lua-path)
+                     (drop record))))))
     (if (= 1 vim.v.vim_did_enter)
       (find-runtime-plugins :plugin "plugin/**/*.fnl")
       (nvim_create_autocmd :VimEnter {:callback #(find-runtime-plugins :plugin "plugin/**/*.fnl")

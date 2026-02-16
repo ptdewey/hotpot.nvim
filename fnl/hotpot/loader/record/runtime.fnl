@@ -13,7 +13,9 @@
         ext (src-path:match ".+%.(.-)$")
         init? (not= nil (string.find src-path "init%....$"))
         true-modname (.. modname-suffix (if init? ".init" ""))
-        runtime-mod-prefix (fmt "hotpot-runtime-%s" runtime-type)
+        compile-only? (or opts.compile-only? false)
+        runtime-mod-prefix (if compile-only? runtime-type
+                               (fmt "hotpot-runtime-%s" runtime-type))
         modname (fmt "%s.%s" runtime-mod-prefix modname-suffix)
         ;; Convert /a/b/c/nvim/ftplugin/x.fnl into
         ;; /a/b/c/nvim/ <- context, the last path section defines our namespace
@@ -27,10 +29,14 @@
         path-inside-context-dir (string.match src-path context-pattern)
         path-to-context-dir (string.sub src-path 1 (* -1 (+ (length path-inside-context-dir) 1)))
         ;; ftplugin/y.fnl -> lua/hotpot-runtime-ftplugin/y.lua
-        lua-code-path (-> (string.gsub path-inside-context-dir
-                                       (.. "^" (vim.pesc runtime-type))
-                                       (join-path :lua runtime-mod-prefix))
-                          (string.gsub "fnl$" "lua"))
+        ;; lsp/x.fnl (compile-only) -> lua/lsp/x.lua
+        lua-code-path (if compile-only?
+                         (let [inside (string.gsub path-inside-context-dir "fnl$" "lua")]
+                           inside)
+                         (-> (string.gsub path-inside-context-dir
+                                         (.. "^" (vim.pesc runtime-type))
+                                         (join-path :lua runtime-mod-prefix))
+                             (string.gsub "fnl$" "lua")))
         ;; small edgecase for relative paths such as in `VIMRUNTIME=runtime nvim`
         namespace (case (string.match path-to-context-dir ".+/(.-)/$")
                     namespace namespace
@@ -38,7 +44,8 @@
         ;; The namespace will be something like "nvim" or "plugin.nvim", etc,
         ;; the parent of plugin/ lua/ etc. This is used so we dont collide with
         ;; the same ft between plugins for example.
-        namespace (.. :hotpot-runtime- namespace)
+        namespace (if compile-only? namespace
+                      (.. :hotpot-runtime- namespace))
         ;; create vim-loader findable cache/hotpot-runtime-<namespace>/lua/hotpot-runtime-ftplugin/y.lua
         lua-path (cache-path-for-compiled-artefact namespace lua-code-path)
         record {: src-path
