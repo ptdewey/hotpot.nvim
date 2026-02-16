@@ -1,44 +1,59 @@
-local fmt = string["format"]
+local fmt = string.format
 local REQUIRED_KEYS = {"sigil-path", "lua-cache-path", "lua-colocation-path", "namespace", "modname", "lua-path", "src-path"}
 local function new(modname, src_path, _1_)
-  local prefix = _1_["prefix"]
-  local extension = _1_["extension"]
+  local prefix = _1_.prefix
+  local extension = _1_.extension
   local opts = _1_
-  _G.assert((nil ~= opts), "Missing argument opts on fnl/hotpot/loader/record/module.fnl:9")
-  _G.assert((nil ~= extension), "Missing argument extension on fnl/hotpot/loader/record/module.fnl:9")
-  _G.assert((nil ~= prefix), "Missing argument prefix on fnl/hotpot/loader/record/module.fnl:9")
-  _G.assert((nil ~= src_path), "Missing argument src-path on fnl/hotpot/loader/record/module.fnl:9")
-  _G.assert((nil ~= modname), "Missing argument modname on fnl/hotpot/loader/record/module.fnl:9")
-  local _let_2_ = require("hotpot.loader.sigil")
-  local SIGIL_FILE = _let_2_["SIGIL_FILE"]
-  local _let_3_ = require("hotpot.loader")
-  local cache_path_for_compiled_artefact = _let_3_["cache-path-for-compiled-artefact"]
+  if (nil == opts) then
+    _G.error("Missing argument opts on fnl/hotpot/loader/record/module.fnl:9", 2)
+  else
+  end
+  if (nil == extension) then
+    _G.error("Missing argument extension on fnl/hotpot/loader/record/module.fnl:9", 2)
+  else
+  end
+  if (nil == prefix) then
+    _G.error("Missing argument prefix on fnl/hotpot/loader/record/module.fnl:9", 2)
+  else
+  end
+  if (nil == src_path) then
+    _G.error("Missing argument src-path on fnl/hotpot/loader/record/module.fnl:9", 2)
+  else
+  end
+  if (nil == modname) then
+    _G.error("Missing argument modname on fnl/hotpot/loader/record/module.fnl:9", 2)
+  else
+  end
+  local _let_7_ = require("hotpot.loader.sigil")
+  local SIGIL_FILE = _let_7_.SIGIL_FILE
+  local _let_8_ = require("hotpot.loader")
+  local cache_path_for_compiled_artefact = _let_8_["cache-path-for-compiled-artefact"]
   local src_path0 = vim.fs.normalize(src_path)
-  local context_dir, code_path = nil, nil
+  local context_dir, code_path
   do
     local slashed_modname = vim.pesc(string.gsub(modname, "%.", "/"))
     local pattern = fmt("(.+/)(%s/%s(.*)%%.%s)", prefix, slashed_modname, extension)
-    local _4_, _5_, _6_ = string.gmatch(src_path0, pattern)()
-    if ((nil ~= _4_) and (nil ~= _5_) and (_6_ == "")) then
-      local context_dir0 = _4_
-      local code_dir = _5_
+    local case_9_, case_10_, case_11_ = string.gmatch(src_path0, pattern)()
+    if ((nil ~= case_9_) and (nil ~= case_10_) and (case_11_ == "")) then
+      local context_dir0 = case_9_
+      local code_dir = case_10_
       context_dir, code_path = context_dir0, code_dir, modname
-    elseif ((nil ~= _4_) and (nil ~= _5_) and (_6_ == "/init")) then
-      local context_dir0 = _4_
-      local code_dir = _5_
+    elseif ((nil ~= case_9_) and (nil ~= case_10_) and (case_11_ == "/init")) then
+      local context_dir0 = case_9_
+      local code_dir = case_10_
       context_dir, code_path = context_dir0, code_dir, (modname .. ".init")
     else
-      local _ = _4_
+      local _ = case_9_
       context_dir, code_path = error(fmt("Hotpot could not extract context-dir and code-path from %s", src_path0))
     end
   end
   local namespace
   do
-    local _8_ = string.match(context_dir, ".+/(.-)/$")
-    if (nil ~= _8_) then
-      local namespace0 = _8_
+    local case_13_ = string.match(context_dir, ".+/(.-)/$")
+    if (nil ~= case_13_) then
+      local namespace0 = case_13_
       namespace = namespace0
-    elseif (_8_ == nil) then
+    elseif (case_13_ == nil) then
       namespace = string.match(context_dir, "([^/]-)/$")
     else
       namespace = nil

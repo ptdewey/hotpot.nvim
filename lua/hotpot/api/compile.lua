@@ -4,10 +4,10 @@ local function inject_macro_searcher()
   local _let_2_ = require("hotpot.runtime")
   local default_config = _let_2_["default-config"]
   local _let_3_ = default_config()
-  local compiler_options = _let_3_["compiler"]
-  local modules_options = compiler_options["modules"]
-  local macros_options = compiler_options["macros"]
-  local preprocessor = compiler_options["preprocessor"]
+  local compiler_options = _let_3_.compiler
+  local modules_options = compiler_options.modules
+  local macros_options = compiler_options.macros
+  local preprocessor = compiler_options.preprocessor
   return compile_string("(+ 1 1)", modules_options, macros_options, preprocessor)
 end
 local function compile_string(str, compiler_options)
@@ -15,7 +15,7 @@ local function compile_string(str, compiler_options)
   local _let_4_ = require("hotpot.fennel")
   local compile_string0 = _let_4_["compile-string"]
   local _let_5_ = require("hotpot.runtime")
-  local traceback = _let_5_["traceback"]
+  local traceback = _let_5_.traceback
   local function _6_()
     return (compile_string0(str, compiler_options))
   end

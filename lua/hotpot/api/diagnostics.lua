@@ -3,8 +3,8 @@ local per_buf_data = {}
 local M = {}
 local api = vim.api
 local function resolve_buf_id(id)
-  local nvim_buf_call = api["nvim_buf_call"]
-  local nvim_get_current_buf = api["nvim_get_current_buf"]
+  local nvim_buf_call = api.nvim_buf_call
+  local nvim_get_current_buf = api.nvim_get_current_buf
   if (0 == id) then
     return nvim_buf_call(id, nvim_get_current_buf)
   else
@@ -34,27 +34,27 @@ local function render_error_diagnostic(buf, ns, err)
     local msg0 = string.gsub(msg, " in strict mode", "")
     return vim.diagnostic.set(ns, buf, {{lnum = line, col = 0, message = msg0, severity = vim.diagnostic.severity.ERROR, source = "hotpot-diagnostic", user_data = err0}})
   end
-  local _2_, _3_, _4_, _5_ = string.match(err, "([^:]-):([-%d:?]+) ([%w]+) error: (.-)\n")
-  if ((_2_ == "unknown") and (_3_ == "?:?") and (nil ~= _4_) and (nil ~= _5_)) then
-    local kind = _4_
-    local msg = _5_
+  local case_2_, case_3_, case_4_, case_5_ = string.match(err, "([^:]-):([-%d:?]+) ([%w]+) error: (.-)\n")
+  if ((case_2_ == "unknown") and (case_3_ == "?:?") and (nil ~= case_4_) and (nil ~= case_5_)) then
+    local kind = case_4_
+    local msg = case_5_
     return set_diagnostic(kind, "unknown", 0, ("(error had no line number)" .. msg), err)
-  elseif ((nil ~= _2_) and (nil ~= _3_) and (nil ~= _4_) and (nil ~= _5_)) then
-    local file = _2_
-    local line_col = _3_
-    local kind = _4_
-    local msg = _5_
-    local _6_ = string.match(line_col, "([%d?]+)")
-    if (_6_ == "?") then
+  elseif ((nil ~= case_2_) and (nil ~= case_3_) and (nil ~= case_4_) and (nil ~= case_5_)) then
+    local file = case_2_
+    local line_col = case_3_
+    local kind = case_4_
+    local msg = case_5_
+    local case_6_ = string.match(line_col, "([%d?]+)")
+    if (case_6_ == "?") then
       return set_diagnostic(kind, file, 0, ("(error had no line number)" .. msg), err)
-    elseif (nil ~= _6_) then
-      local line = _6_
+    elseif (nil ~= case_6_) then
+      local line = case_6_
       return set_diagnostic(kind, file, (tonumber(line) - 1), msg, err)
     else
       return nil
     end
   else
-    local _ = _2_
+    local _ = case_2_
     return nil
   end
 end
@@ -65,25 +65,25 @@ local function make_handler(buf, ns)
   local compile_string = _let_10_["compile-string"]
   local allowed_globals
   do
-    local tbl_21_ = {}
-    local i_22_ = 0
+    local tbl_26_ = {}
+    local i_27_ = 0
     for n, _ in pairs(_G) do
-      local val_23_ = n
-      if (nil ~= val_23_) then
-        i_22_ = (i_22_ + 1)
-        tbl_21_[i_22_] = val_23_
+      local val_28_ = n
+      if (nil ~= val_28_) then
+        i_27_ = (i_27_ + 1)
+        tbl_26_[i_27_] = val_28_
       else
       end
     end
-    allowed_globals = tbl_21_
+    allowed_globals = tbl_26_
   end
   local fname
   do
-    local _12_ = api.nvim_buf_get_name(buf)
-    if (_12_ == "") then
+    local case_12_ = api.nvim_buf_get_name(buf)
+    if (case_12_ == "") then
       fname = nil
-    elseif (nil ~= _12_) then
-      local any = _12_
+    elseif (nil ~= case_12_) then
+      local any = case_12_
       fname = any
     else
       fname = nil
@@ -97,11 +97,11 @@ local function make_handler(buf, ns)
   end
   local kind
   do
-    local _15_ = string.find((fname or ""), "macros?%.fnl$")
-    if (nil ~= _15_) then
-      local any = _15_
+    local case_15_ = string.find((fname or ""), "macros?%.fnl$")
+    if (nil ~= case_15_) then
+      local any = case_15_
       kind = "macro"
-    elseif (_15_ == nil) then
+    elseif (case_15_ == nil) then
       kind = "module"
     else
       kind = nil
@@ -141,13 +141,13 @@ local function make_handler(buf, ns)
       buf_text = wrap(preprocessor(get_buf_text(buf), {}))
     end
     do
-      local _23_, _24_ = compile_string(buf_text, local_compiler_options, compiler_options.macros)
-      if ((_23_ == true) and true) then
-        local _ = _24_
+      local case_23_, case_24_ = compile_string(buf_text, local_compiler_options, compiler_options.macros)
+      if ((case_23_ == true) and true) then
+        local _ = case_24_
         set_buf_err(buf, nil)
         reset_diagnostic(ns)
-      elseif ((_23_ == false) and (nil ~= _24_)) then
-        local err = _24_
+      elseif ((case_23_ == false) and (nil ~= case_24_)) then
+        local err = case_24_
         set_buf_err(buf, err)
         render_error_diagnostic(buf, ns, err)
       else
@@ -178,8 +178,8 @@ end
 M.attach = function(user_buf)
   local buf = resolve_buf_id(user_buf)
   do
-    local _28_ = data_for_buf(buf)
-    if (_28_ == nil) then
+    local case_28_ = data_for_buf(buf)
+    if (case_28_ == nil) then
       do_attach(buf)
     else
     end
@@ -188,10 +188,10 @@ M.attach = function(user_buf)
 end
 M.detach = function(user_buf, _3fopts)
   local buf = resolve_buf_id(user_buf)
-  local _30_ = data_for_buf(buf)
-  if ((_G.type(_30_) == "table") and (nil ~= _30_.ns) and (nil ~= _30_["au-group"])) then
-    local ns = _30_.ns
-    local au_group = _30_["au-group"]
+  local case_30_ = data_for_buf(buf)
+  if ((_G.type(case_30_) == "table") and (nil ~= case_30_.ns) and (nil ~= case_30_["au-group"])) then
+    local ns = case_30_.ns
+    local au_group = case_30_["au-group"]
     api.nvim_clear_autocmds({group = au_group, buffer = buf})
     reset_diagnostic(ns)
     record_detachment(buf)
@@ -202,14 +202,14 @@ M.detach = function(user_buf, _3fopts)
 end
 M["error-for-buf"] = function(user_buf)
   local buf = resolve_buf_id(user_buf)
-  local _32_ = data_for_buf(buf)
-  if (_32_ == nil) then
+  local case_32_ = data_for_buf(buf)
+  if (case_32_ == nil) then
     api.nvim_echo({{"Hotpot diagnostics not attached to buffer, could not get error", "DiagnosticWarn"}}, false, {})
     return nil
-  elseif ((_G.type(_32_) == "table") and (nil ~= _32_.err)) then
-    local err = _32_.err
+  elseif ((_G.type(case_32_) == "table") and (nil ~= case_32_.err)) then
+    local err = case_32_.err
     return err
-  elseif ((_G.type(_32_) == "table") and (_32_.err == nil)) then
+  elseif ((_G.type(case_32_) == "table") and (case_32_.err == nil)) then
     return nil
   else
     return nil
@@ -235,7 +235,7 @@ M.disable = function()
   api.nvim_clear_autocmds({group = ft_autocmd_data["au-group"]})
   ft_autocmd_data["au-group"] = nil
   for _, _36_ in pairs(per_buf_data) do
-    local buf = _36_["buf"]
+    local buf = _36_.buf
     M.detach(buf)
   end
   return nil

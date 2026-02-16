@@ -12,22 +12,22 @@ local function brain_traceback(msg)
   local error_tail = ("*** Hotpot thinks you were requiring a module, you will   ***\n" .. "*** likely see an additional error below because lua was  ***\n" .. "*** unable to load the module.                            ***")
   local lines
   do
-    local tbl_21_ = {}
-    local i_22_ = 0
+    local tbl_26_ = {}
+    local i_27_ = 0
     for line in string.gmatch(semi, "[^\r\n]+") do
-      local val_23_
+      local val_28_
       if not string.match(line, hotpot_internals_pattern) then
-        val_23_ = line
+        val_28_ = line
       else
-        val_23_ = nil
+        val_28_ = nil
       end
-      if (nil ~= val_23_) then
-        i_22_ = (i_22_ + 1)
-        tbl_21_[i_22_] = val_23_
+      if (nil ~= val_28_) then
+        i_27_ = (i_27_ + 1)
+        tbl_26_[i_27_] = val_28_
       else
       end
     end
-    lines = tbl_21_
+    lines = tbl_26_
   end
   local function _4_()
     local state = {stack = {}, message = {}}
@@ -66,8 +66,8 @@ local function brain_traceback(msg)
     return state
   end
   local _let_12_ = _4_()
-  local stack = _let_12_["stack"]
-  local message = _let_12_["message"]
+  local stack = _let_12_.stack
+  local message = _let_12_.message
   local in_require_3f
   do
     local review_stack

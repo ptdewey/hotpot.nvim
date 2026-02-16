@@ -7,11 +7,11 @@ end
 local function confirm_remove(path)
   local message = ("Remove file? " .. path)
   local opts = "NO\nYes"
-  local _2_ = vim.fn.confirm(message, opts, 1, "Warning")
-  if (_2_ == 1) then
+  local case_2_ = vim.fn.confirm(message, opts, 1, "Warning")
+  if (case_2_ == 1) then
     vim.notify("Did NOT remove file.")
     return false
-  elseif (_2_ == 2) then
+  elseif (case_2_ == 2) then
     return uv.fs_unlink(path)
   else
     return nil
@@ -71,13 +71,13 @@ local function clear_cache(_3fopts)
   end
 end
 local function open_cache(_3fcb)
-  local _13_ = type(_3fcb)
-  if (_13_ == "nil") then
+  local case_13_ = type(_3fcb)
+  if (case_13_ == "nil") then
     return vim.cmd.vsplit(cache_prefix())
-  elseif (_13_ == "function") then
+  elseif (case_13_ == "function") then
     return _3fcb(cache_prefix())
   else
-    local _ = _13_
+    local _ = case_13_
     return error("open-cache argument must be a function (or nil)")
   end
 end

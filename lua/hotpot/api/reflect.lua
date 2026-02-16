@@ -18,11 +18,11 @@ local function resolve_buf_id(buf)
 end
 local function do_eval(str, compiler_options)
   local _let_1_ = require("hotpot.fennel")
-  local eval = _let_1_["eval"]
+  local eval = _let_1_.eval
   local _let_2_ = require("hotpot.runtime")
-  local traceback = _let_2_["traceback"]
+  local traceback = _let_2_.traceback
   local _let_3_ = require("hotpot.fennel")
-  local view = _let_3_["view"]
+  local view = _let_3_.view
   local code = string.format("(do %s)", compiler_options.preprocessor(str, {}))
   local printed = {}
   local env
@@ -33,7 +33,7 @@ local function do_eval(str, compiler_options)
     local function _6_(...)
       local s = ""
       for _, v in ipairs({...}) do
-        s = (s .. view(v) .. "\9")
+        s = (s .. view(v) .. "\t")
       end
       return s
     end
@@ -41,22 +41,22 @@ local function do_eval(str, compiler_options)
   end
   env = setmetatable({print = _4_}, {__index = (compiler_options.modules.env or _G)})
   local module_options = vim.tbl_extend("keep", {env = env}, compiler_options.modules)
-  local ok_3f, viewed = nil, nil
+  local ok_3f, viewed
   do
-    local _7_, _8_ = nil, nil
+    local case_7_, case_8_
     local function _9_()
       return eval(code, module_options)
     end
-    _7_, _8_ = xpcall(_9_, traceback)
-    if ((_7_ == true) and (nil ~= _8_)) then
-      local val_1 = _8_
+    case_7_, case_8_ = xpcall(_9_, traceback)
+    if ((case_7_ == true) and (nil ~= case_8_)) then
+      local val_1 = case_8_
       ok_3f, viewed = true, view(val_1)
-    elseif ((_7_ == true) and (_8_ == nil)) then
+    elseif ((case_7_ == true) and (case_8_ == nil)) then
       ok_3f, viewed = true, view(nil)
-    elseif ((_7_ == false) and (nil ~= _8_)) then
-      local err = _8_
+    elseif ((case_7_ == false) and (nil ~= case_8_)) then
+      local err = case_8_
       ok_3f, viewed = false, err
-    elseif ((_7_ == false) and (_8_ == nil)) then
+    elseif ((case_7_ == false) and (case_8_ == nil)) then
       ok_3f, viewed = false, "::reflect caught an error but the error had no text::"
     else
       ok_3f, viewed = nil
@@ -76,7 +76,7 @@ local function default_session(buf)
 end
 local function _set_extmarks(session, start_line, start_col, stop_line, stop_col)
   do
-    local nvim_buf_set_extmark = vim.api["nvim_buf_set_extmark"]
+    local nvim_buf_set_extmark = vim.api.nvim_buf_set_extmark
     local start = nvim_buf_set_extmark(session["input-buf"], session.ns, start_line, start_col, {id = session["mark-start"], sign_text = "(*", sign_hl_group = "DiagnosticHint", strict = false})
     local stop = nvim_buf_set_extmark(session["input-buf"], session.ns, stop_line, stop_col, {id = session["mark-stop"], virt_text = {{" *)", "DiagnosticHint"}}, virt_text_pos = "eol", strict = false})
     session["mark-start"] = start
@@ -95,19 +95,19 @@ local function _get_extmarks(session)
   local stop_l = _let_14_[1]
   local stop_c = _let_14_[2]
   local positions = {start_l, start_c, stop_l, stop_c}
-  local ok_3f, positions0 = nil, nil
+  local ok_3f, positions0
   if ((_G.type(positions) == "table") and (nil ~= positions[1]) and (nil ~= positions[2]) and (positions[1] == positions[3]) and (positions[2] == positions[4])) then
     local l = positions[1]
     local c = positions[2]
-    local _15_, _16_ = nil, nil
+    local case_15_, case_16_
     do
-      _15_, _16_ = pcall(_set_extmarks, session, unpack(session["extmark-memory"]))
+      case_15_, case_16_ = pcall(_set_extmarks, session, unpack(session["extmark-memory"]))
     end
-    if ((_15_ == true) and true) then
-      local _ = _16_
+    if ((case_15_ == true) and true) then
+      local _ = case_16_
       ok_3f, positions0 = true, session["extmark-memory"]
-    elseif ((_15_ == false) and (nil ~= _16_)) then
-      local err = _16_
+    elseif ((case_15_ == false) and (nil ~= case_16_)) then
+      local err = case_16_
       ok_3f, positions0 = false, err
     else
       ok_3f, positions0 = nil
@@ -123,12 +123,12 @@ local function _get_extmarks(session)
   return ok_3f, positions0
 end
 local function _get_extmarks_content(session, start_l, start_c, stop_l, stop_c)
-  local _20_, _21_ = pcall(api.nvim_buf_get_text, session["input-buf"], start_l, start_c, stop_l, stop_c, {})
-  if ((_20_ == true) and (nil ~= _21_)) then
-    local text = _21_
+  local case_20_, case_21_ = pcall(api.nvim_buf_get_text, session["input-buf"], start_l, start_c, stop_l, stop_c, {})
+  if ((case_20_ == true) and (nil ~= case_21_)) then
+    local text = case_21_
     return table.concat(text, "\n")
-  elseif ((_20_ == false) and (nil ~= _21_)) then
-    local err = _21_
+  elseif ((case_20_ == false) and (nil ~= case_21_)) then
+    local err = case_21_
     return err
   else
     return nil
@@ -148,17 +148,17 @@ local function autocmd_handler(session)
     end
     local _25_
     do
-      local tbl_21_ = {}
-      local i_22_ = 0
+      local tbl_26_ = {}
+      local i_27_ = 0
       for i, p in ipairs((printed or {})) do
-        local val_23_ = (";;=> " .. p)
-        if (nil ~= val_23_) then
-          i_22_ = (i_22_ + 1)
-          tbl_21_[i_22_] = val_23_
+        local val_28_ = (";;=> " .. p)
+        if (nil ~= val_28_) then
+          i_27_ = (i_27_ + 1)
+          tbl_26_[i_27_] = val_28_
         else
         end
       end
-      _25_ = tbl_21_
+      _25_ = tbl_26_
     end
     output = _23_(table.concat(_25_, "\n"))
     return ok_3f, output
@@ -171,22 +171,22 @@ local function autocmd_handler(session)
     local positions_3f, positions = _get_extmarks(session)
     local text
     do
-      local _27_, _28_ = positions_3f, positions
-      if ((_27_ == true) and (_28_ == positions)) then
+      local case_27_, case_28_ = positions_3f, positions
+      if ((case_27_ == true) and (case_28_ == positions)) then
         text = _get_extmarks_content(session, unpack(positions))
-      elseif ((_27_ == false) and (nil ~= _28_)) then
-        local err = _28_
+      elseif ((case_27_ == false) and (nil ~= case_28_)) then
+        local err = case_28_
         text = ("Range was irrecoverably damaged by the editor, " .. "try re-selecting a range.\n" .. "Error:\n" .. positions)
       else
         text = nil
       end
     end
-    local result_ok_3f, result = nil, nil
+    local result_ok_3f, result
     if positions_3f then
-      local _30_ = session.mode
-      if (_30_ == "eval") then
+      local case_30_ = session.mode
+      if (case_30_ == "eval") then
         result_ok_3f, result = process_eval(text)
-      elseif (_30_ == "compile") then
+      elseif (case_30_ == "compile") then
         result_ok_3f, result = process_compile(text)
       else
         result_ok_3f, result = nil
@@ -280,7 +280,7 @@ local function attach_autocmd(session)
   return session
 end
 local function clear_autocmd(session)
-  local au = session["au"]
+  local au = session.au
   api.nvim_del_autocmd(au)
   session["au"] = nil
   return session
@@ -334,11 +334,11 @@ M["attach-input"] = function(session_id, given_buf_id, _3fcompiler_options)
   local buf = resolve_buf_id(given_buf_id)
   local fname
   do
-    local _53_ = api.nvim_buf_get_name(buf)
-    if (_53_ == "") then
+    local case_53_ = api.nvim_buf_get_name(buf)
+    if (case_53_ == "") then
       fname = nil
-    elseif (nil ~= _53_) then
-      local name = _53_
+    elseif (nil ~= case_53_) then
+      local name = case_53_
       fname = name
     else
       fname = nil

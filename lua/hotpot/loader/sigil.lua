@@ -1,35 +1,35 @@
-local fmt = string["format"]
+local fmt = string.format
 local SIGIL_FILE = ".hotpot.lua"
 local function load(path)
   local defaults = {schema = "hotpot/1", compiler = {}, build = false, clean = false}
   local valid_3f
   local function _1_(sigil)
-    local _2_
+    local case_2_
     do
-      local tbl_21_ = {}
-      local i_22_ = 0
+      local tbl_26_ = {}
+      local i_27_ = 0
       for key, _val in pairs(sigil) do
-        local val_23_
+        local val_28_
         do
-          local _3_ = defaults[key]
-          if (_3_ == nil) then
-            val_23_ = key
+          local case_3_ = defaults[key]
+          if (case_3_ == nil) then
+            val_28_ = key
           else
-            val_23_ = nil
+            val_28_ = nil
           end
         end
-        if (nil ~= val_23_) then
-          i_22_ = (i_22_ + 1)
-          tbl_21_[i_22_] = val_23_
+        if (nil ~= val_28_) then
+          i_27_ = (i_27_ + 1)
+          tbl_26_[i_27_] = val_28_
         else
         end
       end
-      _2_ = tbl_21_
+      case_2_ = tbl_26_
     end
-    if ((_G.type(_2_) == "table") and (_2_[1] == nil)) then
+    if ((_G.type(case_2_) == "table") and (case_2_[1] == nil)) then
       return true
-    elseif (nil ~= _2_) then
-      local invalid_keys = _2_
+    elseif (nil ~= case_2_) then
+      local invalid_keys = case_2_
       local e = fmt("invalid keys in sigil %s: %s. The valid keys are: %s.", path, table.concat(invalid_keys, ", "), table.concat(vim.tbl_keys(defaults), ", "))
       return false, e
     else
@@ -38,35 +38,35 @@ local function load(path)
   end
   valid_3f = _1_
   local function _7_(...)
-    local _8_, _9_ = ...
-    if (nil ~= _8_) then
-      local sigil_fn = _8_
+    local case_8_, case_9_ = ...
+    if (nil ~= case_8_) then
+      local sigil_fn = case_8_
       local function _10_(...)
-        local _11_, _12_ = ...
-        local and_13_ = ((_11_ == true) and (nil ~= _12_))
+        local case_11_, case_12_ = ...
+        local and_13_ = ((case_11_ == true) and (nil ~= case_12_))
         if and_13_ then
-          local sigil = _12_
+          local sigil = case_12_
           and_13_ = ("table" == type(sigil))
         end
         if and_13_ then
-          local sigil = _12_
+          local sigil = case_12_
           local function _15_(...)
-            local _16_, _17_ = ...
-            if (_16_ == true) then
+            local case_16_, case_17_ = ...
+            if (case_16_ == true) then
               return sigil
-            elseif ((_16_ == true) and (_17_ == nil)) then
+            elseif ((case_16_ == true) and (case_17_ == nil)) then
               vim.notify_once(fmt("Hotpot sigil was exists but returned nil, %s", path), vim.log.levels.WARN)
               return nil
-            elseif ((_16_ == true) and (nil ~= _17_)) then
-              local x = _17_
+            elseif ((case_16_ == true) and (nil ~= case_17_)) then
+              local x = case_17_
               vim.notify(table.concat({"Hotpot sigil failed to load due to an input error.", fmt("Sigil path: %s", path), fmt("Sigil returned %s instead of table", type(x))}, "\n"), vim.log.levels.ERROR)
               return error("Hotpot refusing to continue to avoid unintentional side effects.", 0)
-            elseif ((_16_ == nil) and (nil ~= _17_)) then
-              local e = _17_
+            elseif ((case_16_ == nil) and (nil ~= case_17_)) then
+              local e = case_17_
               vim.notify(table.concat({"Hotpot sigil failed to load due to a syntax error.", fmt("Sigil path: %s", path), e}, "\n"), vim.log.levels.ERROR)
               return error("Hotpot refusing to continue to avoid unintentional side effects.", 0)
-            elseif ((_16_ == false) and (nil ~= _17_)) then
-              local e = _17_
+            elseif ((case_16_ == false) and (nil ~= case_17_)) then
+              local e = case_17_
               vim.notify_once(fmt("hotpot sigil was invalid, %s\n%s", path, e), vim.log.levels.ERROR)
               return error("hotpot refusing to continue to avoid unintentional side effects.", 0)
             else
@@ -74,19 +74,19 @@ local function load(path)
             end
           end
           return _15_(valid_3f(sigil))
-        elseif ((_11_ == true) and (_12_ == nil)) then
+        elseif ((case_11_ == true) and (case_12_ == nil)) then
           vim.notify_once(fmt("Hotpot sigil was exists but returned nil, %s", path), vim.log.levels.WARN)
           return nil
-        elseif ((_11_ == true) and (nil ~= _12_)) then
-          local x = _12_
+        elseif ((case_11_ == true) and (nil ~= case_12_)) then
+          local x = case_12_
           vim.notify(table.concat({"Hotpot sigil failed to load due to an input error.", fmt("Sigil path: %s", path), fmt("Sigil returned %s instead of table", type(x))}, "\n"), vim.log.levels.ERROR)
           return error("Hotpot refusing to continue to avoid unintentional side effects.", 0)
-        elseif ((_11_ == nil) and (nil ~= _12_)) then
-          local e = _12_
+        elseif ((case_11_ == nil) and (nil ~= case_12_)) then
+          local e = case_12_
           vim.notify(table.concat({"Hotpot sigil failed to load due to a syntax error.", fmt("Sigil path: %s", path), e}, "\n"), vim.log.levels.ERROR)
           return error("Hotpot refusing to continue to avoid unintentional side effects.", 0)
-        elseif ((_11_ == false) and (nil ~= _12_)) then
-          local e = _12_
+        elseif ((case_11_ == false) and (nil ~= case_12_)) then
+          local e = case_12_
           vim.notify_once(fmt("hotpot sigil was invalid, %s\n%s", path, e), vim.log.levels.ERROR)
           return error("hotpot refusing to continue to avoid unintentional side effects.", 0)
         else
@@ -94,19 +94,19 @@ local function load(path)
         end
       end
       return _10_(pcall(sigil_fn))
-    elseif ((_8_ == true) and (_9_ == nil)) then
+    elseif ((case_8_ == true) and (case_9_ == nil)) then
       vim.notify_once(fmt("Hotpot sigil was exists but returned nil, %s", path), vim.log.levels.WARN)
       return nil
-    elseif ((_8_ == true) and (nil ~= _9_)) then
-      local x = _9_
+    elseif ((case_8_ == true) and (nil ~= case_9_)) then
+      local x = case_9_
       vim.notify(table.concat({"Hotpot sigil failed to load due to an input error.", fmt("Sigil path: %s", path), fmt("Sigil returned %s instead of table", type(x))}, "\n"), vim.log.levels.ERROR)
       return error("Hotpot refusing to continue to avoid unintentional side effects.", 0)
-    elseif ((_8_ == nil) and (nil ~= _9_)) then
-      local e = _9_
+    elseif ((case_8_ == nil) and (nil ~= case_9_)) then
+      local e = case_9_
       vim.notify(table.concat({"Hotpot sigil failed to load due to a syntax error.", fmt("Sigil path: %s", path), e}, "\n"), vim.log.levels.ERROR)
       return error("Hotpot refusing to continue to avoid unintentional side effects.", 0)
-    elseif ((_8_ == false) and (nil ~= _9_)) then
-      local e = _9_
+    elseif ((case_8_ == false) and (nil ~= case_9_)) then
+      local e = case_9_
       vim.notify_once(fmt("hotpot sigil was invalid, %s\n%s", path, e), vim.log.levels.ERROR)
       return error("hotpot refusing to continue to avoid unintentional side effects.", 0)
     else

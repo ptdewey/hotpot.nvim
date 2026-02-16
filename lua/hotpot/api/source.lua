@@ -1,31 +1,31 @@
 local function split_path(path)
   local sep = string.sub(package.config, 1, 1)
-  local tbl_21_ = {}
-  local i_22_ = 0
+  local tbl_26_ = {}
+  local i_27_ = 0
   for v in string.gmatch(path, ("[^" .. sep .. "]+")) do
-    local val_23_ = v
-    if (nil ~= val_23_) then
-      i_22_ = (i_22_ + 1)
-      tbl_21_[i_22_] = val_23_
+    local val_28_ = v
+    if (nil ~= val_28_) then
+      i_27_ = (i_27_ + 1)
+      tbl_26_[i_27_] = val_28_
     else
     end
   end
-  return tbl_21_
+  return tbl_26_
 end
 local function find_module_name_parts(path_parts, acc)
   local head = path_parts[1]
   local rest = (function (t, k) return ((getmetatable(t) or {}).__fennelrest or function (t, k) return {(table.unpack or unpack)(t, k)} end)(t, k) end)(path_parts, 2)
-  local _2_, _3_ = head, #rest
-  if ((_2_ == "init.fnl") and (_3_ == 0)) then
+  local case_2_, case_3_ = head, #rest
+  if ((case_2_ == "init.fnl") and (case_3_ == 0)) then
     return acc
-  elseif ((nil ~= _2_) and (_3_ == 0)) then
-    local file = _2_
+  elseif ((nil ~= case_2_) and (case_3_ == 0)) then
+    local file = case_2_
     local last = string.gsub(file, "%.fnl$", "")
     table.insert(acc, last)
     return acc
-  elseif ((nil ~= _2_) and true) then
-    local dir = _2_
-    local _ = _3_
+  elseif ((nil ~= case_2_) and true) then
+    local dir = case_2_
+    local _ = case_3_
     table.insert(acc, dir)
     return find_module_name_parts(rest, acc)
   else

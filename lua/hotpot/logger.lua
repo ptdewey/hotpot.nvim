@@ -2,12 +2,12 @@ local M = {}
 local PID = vim.fn.getpid()
 local _2apath_2a = vim.fs.normalize(string.format("%s/%s", vim.fn.stdpath("log"), "hotpot.log"))
 local function view(x)
-  local _1_, _2_ = pcall(require, "fennel")
-  if ((_1_ == true) and ((_G.type(_2_) == "table") and (nil ~= _2_.view))) then
-    local view0 = _2_.view
+  local case_1_, case_2_ = pcall(require, "fennel")
+  if ((case_1_ == true) and ((_G.type(case_2_) == "table") and (nil ~= case_2_.view))) then
+    local view0 = case_2_.view
     return view0(x)
-  elseif ((_1_ == false) and true) then
-    local _ = _2_
+  elseif ((case_1_ == false) and true) then
+    local _ = case_2_
     return vim.inspect(x)
   else
     return nil
@@ -16,13 +16,13 @@ end
 local _2alog_fd_2a = nil
 local function open(path)
   if not _2alog_fd_2a then
-    local _4_, _5_ = io.open(path, "a")
-    if (nil ~= _4_) then
-      local fd = _4_
+    local case_4_, case_5_ = io.open(path, "a")
+    if (nil ~= case_4_) then
+      local fd = case_4_
       fd:setvbuf("line")
       _2alog_fd_2a = fd
-    elseif ((_4_ == nil) and (nil ~= _5_)) then
-      local e = _5_
+    elseif ((case_4_ == nil) and (nil ~= case_5_)) then
+      local e = case_5_
       error(e)
     else
     end
@@ -40,27 +40,27 @@ local function expand_string(msg, ...)
   local n = select("#", ...)
   local details
   do
-    local tbl_21_ = {}
-    local i_22_ = 0
+    local tbl_26_ = {}
+    local i_27_ = 0
     for i = 1, n do
-      local val_23_
+      local val_28_
       do
         local v = vargs[i]
-        local _8_ = type(v)
-        if (_8_ == "string") then
-          val_23_ = v
+        local case_8_ = type(v)
+        if (case_8_ == "string") then
+          val_28_ = v
         else
-          local _ = _8_
-          val_23_ = view(v)
+          local _ = case_8_
+          val_28_ = view(v)
         end
       end
-      if (nil ~= val_23_) then
-        i_22_ = (i_22_ + 1)
-        tbl_21_[i_22_] = val_23_
+      if (nil ~= val_28_) then
+        i_27_ = (i_27_ + 1)
+        tbl_26_[i_27_] = val_28_
       else
       end
     end
-    details = tbl_21_
+    details = tbl_26_
   end
   return string.format(msg, unpack(details))
 end
@@ -73,11 +73,11 @@ end
 M.info = function(msg, ...)
   local msg0
   do
-    local _11_ = type(msg)
-    if (_11_ == "string") then
+    local case_11_ = type(msg)
+    if (case_11_ == "string") then
       msg0 = expand_string(msg, ...)
     else
-      local _ = _11_
+      local _ = case_11_
       msg0 = view(msg)
     end
   end
